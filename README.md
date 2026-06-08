@@ -1,3 +1,3 @@
 # Agentic Internship Coordinator System
 
-CrewAI framework ile geliştirilmiş, staj başvurularını otomatik işleyen çok ajanlı sistem.
+A multi-agent system developed with the CrewAI framework that automatically processes internship applications.
