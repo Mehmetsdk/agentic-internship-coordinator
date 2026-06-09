@@ -2,30 +2,10 @@
 
 from crewai import Agent, LLM
 
+from agents.completeness_validation import create_completeness_validation_agent
 from agents.document_extraction import create_document_extraction_agent
 from agents.email_intake import create_email_intake_agent
-
-
-def create_completeness_validation_agent(llm: LLM) -> Agent:
-    return Agent(
-        role="Completeness Validation Specialist",
-        goal="Check extracted application data for missing or incomplete fields.",
-        backstory="You review structured extraction output and report field-level completeness.",
-        llm=llm,
-        verbose=True,
-        allow_delegation=False,
-    )
-
-
-def create_university_rules_agent(llm: LLM) -> Agent:
-    return Agent(
-        role="University Rules Specialist",
-        goal="Validate applications against university internship regulations.",
-        backstory="You apply official internship policies and document any violations.",
-        llm=llm,
-        verbose=True,
-        allow_delegation=False,
-    )
+from agents.university_rules import create_university_rules_agent
 
 
 def create_supervisor_verification_agent(llm: LLM) -> Agent:
