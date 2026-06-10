@@ -1,0 +1,16 @@
+{
+  "application_id": "INCOMPLETE-008",
+  "student_name": "Felix Weber",
+  "student_id": "S20210763",
+  "student_email": "felix.weber@student.university.edu",
+  "field_of_study": "Software Engineering",
+  "semester": "SS 2026",
+  "company_name": "CloudNest Systems",
+  "supervisor_name": "missing",
+  "supervisor_email": "tanaka@cloudnest.com",
+  "internship_dates": "unclear",
+  "internship_start": "2026-06-01",
+  "internship_end": "2026-07-31",
+  "working_days": 44,
+  "expected_completeness_status": "INCOMPLETE"
+}

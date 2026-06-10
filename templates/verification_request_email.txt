@@ -1,0 +1,18 @@
+Subject: Internship Supervisor Verification Request — {{student_name}}
+
+Dear {{supervisor_name}},
+
+The University Internship Office is processing an internship application submitted by {{student_name}} for a placement at {{company_name}}.
+
+As part of our standard verification process, we kindly ask you to confirm the following:
+
+1. You are the designated workplace supervisor for this internship.
+2. The company details provided in the application are accurate.
+3. You agree to supervise the student for the proposed internship period.
+
+Please reply to this email within five (5) business days to confirm or to provide any corrections. If you are not the appropriate contact, please direct us to the correct supervisor.
+
+Thank you for your cooperation.
+
+Kind regards,
+University Internship Office

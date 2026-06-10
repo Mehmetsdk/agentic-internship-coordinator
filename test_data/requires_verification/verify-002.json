@@ -1,0 +1,17 @@
+{
+  "application_id": "VERIFY-002",
+  "student_name": "Jonas Berg",
+  "student_id": "S20210892",
+  "student_email": "jonas.berg@student.university.edu",
+  "field_of_study": "Business Administration",
+  "semester": "SS 2026",
+  "company_name": "Unverified Startup LLC",
+  "supervisor_name": "Mr. Henrik Larsen",
+  "supervisor_email": "info@startup-unknown.io",
+  "internship_dates": "2026-06-01 to 2026-07-31",
+  "internship_start": "2026-06-01",
+  "internship_end": "2026-07-31",
+  "working_days": 44,
+  "expected_verification_status": "REQUIRES_VERIFICATION",
+  "reason": "Unknown company with generic contact email"
+}

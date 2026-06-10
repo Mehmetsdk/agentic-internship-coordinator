@@ -1,0 +1,16 @@
+{
+  "application_id": "INCOMPLETE-001",
+  "student_name": "Anna Mueller",
+  "student_id": "missing",
+  "student_email": "anna.mueller@student.university.edu",
+  "field_of_study": "Computer Science",
+  "semester": "WS 2025/26",
+  "company_name": "TechVision GmbH",
+  "supervisor_name": "Dr. Petra Klein",
+  "supervisor_email": "klein@techvision.de",
+  "internship_dates": "2026-06-01 to 2026-07-31",
+  "internship_start": "2026-06-01",
+  "internship_end": "2026-07-31",
+  "working_days": 44,
+  "expected_completeness_status": "INCOMPLETE"
+}
