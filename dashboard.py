@@ -51,6 +51,8 @@ col_list, col_detail = st.columns([2, 3], gap="large")
 filtered = APPLICATIONS if status_filter == "All" else [a for a in APPLICATIONS if a["status"] == status_filter]
 
 with col_list:
+    if not filtered:
+        st.markdown('<div style="color:#999;font-size:0.85rem;padding:1rem 0;">No applications found.</div>', unsafe_allow_html=True)
     st.markdown('<span style="font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:#aaa;">Applications</span>', unsafe_allow_html=True)
     for app in filtered:
         bc = {"Pending":"badge-pending","Approved":"badge-approved","Rejected":"badge-rejected","Review":"badge-review"}.get(app["status"],"badge-pending")
