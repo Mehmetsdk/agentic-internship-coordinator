@@ -5,6 +5,8 @@ _cache_mod.mark_cache_breakpoint = lambda msg: msg  # noqa: E731
 from dotenv import load_dotenv
 from crewai import Crew, Process, Task, LLM
 
+from human_review import get_human_decision
+from audit_logger import log_case, generate_case_id
 from agents import (
     create_email_intake_agent,
     create_document_extraction_agent,
@@ -25,7 +27,8 @@ groq_llm = LLM(
 )
 
 
-def run_pipeline(pdf_path: str, student_email: str) -> None:
+def run_pipeline(pdf_path: str, student_email: str) -> dict:
+    case_id = generate_case_id(student_email)
     email_intake = create_email_intake_agent(groq_llm)
     doc_extraction = create_document_extraction_agent(groq_llm)
     completeness = create_completeness_validation_agent(groq_llm)
@@ -77,14 +80,27 @@ def run_pipeline(pdf_path: str, student_email: str) -> None:
     )
 
     result = crew.kickoff()
-    print("\n" + "=" * 60)
-    print("RECOMMENDATION FOR COORDINATOR:")
-    print("=" * 60)
-    print(result)
+
+    # Human-in-the-loop: coordinator reviews and approves
+    human_decision = get_human_decision(str(result))
+
+    # Audit log
+    log_case(
+        case_id=case_id,
+        student_email=student_email,
+        pdf_path=pdf_path,
+        agent_outputs={"final_recommendation": str(result)},
+        human_decision=human_decision,
+    )
+
+    return human_decision
 
 
 if __name__ == "__main__":
-    run_pipeline(
+    final = run_pipeline(
         pdf_path="data/test_applications/sample.pdf",
         student_email="student@example.com",
     )
+    print(f"\nFinal coordinator decision: {final['decision']}")
+    if final["notes"]:
+        print(f"Notes: {final['notes']}")
