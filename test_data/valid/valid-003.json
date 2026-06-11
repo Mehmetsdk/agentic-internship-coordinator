@@ -1,0 +1,18 @@
+{
+  "student_name": "Elena Rossi",
+  "student_id": "S20210337",
+  "student_email": "elena.rossi@student.university.edu",
+  "field_of_study": "Mechanical Engineering",
+  "semester": "WS 2025/26",
+  "company_name": "GreenGrid Energy",
+  "supervisor_name": "Ms. Clara Fontana",
+  "supervisor_email": "fontana@greengrid-energy.com",
+  "internship_dates": "2026-06-01 to 2026-07-31",
+  "internship_start": "2026-06-01",
+  "internship_end": "2026-07-31",
+  "working_days": 44,
+  "application_id": "VALID-003",
+  "expected_completeness_status": "COMPLETE",
+  "expected_rule_validation_status": "PASS",
+  "expected_verification_status": "NOT_REQUIRED"
+}

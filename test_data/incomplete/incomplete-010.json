@@ -1,0 +1,16 @@
+{
+  "application_id": "INCOMPLETE-010",
+  "student_name": "Oscar Nilsson",
+  "student_id": "S20211122",
+  "student_email": "oscar.nilsson@student.university.edu",
+  "field_of_study": "Civil Engineering",
+  "semester": "SS 2026",
+  "company_name": "missing",
+  "supervisor_name": "Mr. Daniel Costa",
+  "supervisor_email": "missing",
+  "internship_dates": "2026-06-01 to 2026-07-31",
+  "internship_start": "2026-06-01",
+  "internship_end": "2026-07-31",
+  "working_days": 44,
+  "expected_completeness_status": "INCOMPLETE"
+}

@@ -1,0 +1,17 @@
+{
+  "application_id": "VERIFY-001",
+  "student_name": "Anna Mueller",
+  "student_id": "S20210451",
+  "student_email": "anna.mueller@student.university.edu",
+  "field_of_study": "Computer Science",
+  "semester": "WS 2025/26",
+  "company_name": "TechVision GmbH",
+  "supervisor_name": "Dr. Petra Klein",
+  "supervisor_email": "supervisor.contact@gmail.com",
+  "internship_dates": "2026-06-01 to 2026-07-31",
+  "internship_start": "2026-06-01",
+  "internship_end": "2026-07-31",
+  "working_days": 44,
+  "expected_verification_status": "REQUIRES_VERIFICATION",
+  "reason": "Personal webmail address"
+}

@@ -1,0 +1,14 @@
+Subject: Action Required — Missing Information in Your Internship Application
+
+Dear {{student_name}},
+
+Thank you for submitting your internship application. After an initial review, we are unable to proceed because the following required information is missing or incomplete:
+
+{{missing_fields}}
+
+Please update your application documents and resubmit them at your earliest convenience. If you need assistance, contact the Internship Office.
+
+Company on file: {{company_name}}
+
+Kind regards,
+University Internship Office

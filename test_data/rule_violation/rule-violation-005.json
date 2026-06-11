@@ -1,0 +1,17 @@
+{
+  "application_id": "RULE-VIOLATION-005",
+  "student_name": "Sofia Patel",
+  "student_id": "S20210678",
+  "student_email": "sofia.patel@student.university.edu",
+  "field_of_study": "Electrical Engineering",
+  "semester": "WS 2025/26",
+  "company_name": "UrbanBuild Architects",
+  "supervisor_name": "Dr. Amira Hassan",
+  "supervisor_email": "hassan@urbanbuild.se",
+  "internship_dates": "2026-07-01 to 2026-07-22",
+  "internship_start": "2026-06-01",
+  "internship_end": "2026-07-22",
+  "working_days": 15,
+  "expected_rule_validation_status": "FAIL",
+  "violation": "Duration below 20 working days"
+}

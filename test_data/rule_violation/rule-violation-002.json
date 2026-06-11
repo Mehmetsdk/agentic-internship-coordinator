@@ -1,0 +1,17 @@
+{
+  "application_id": "RULE-VIOLATION-002",
+  "student_name": "Jonas Berg",
+  "student_id": "missing",
+  "student_email": "jonas.berg@student.university.edu",
+  "field_of_study": "Business Administration",
+  "semester": "SS 2026",
+  "company_name": "Nordic Analytics AS",
+  "supervisor_name": "Mr. Henrik Larsen",
+  "supervisor_email": "larsen@nordicanalytics.no",
+  "internship_dates": "2026-06-01 to 2026-07-31",
+  "internship_start": "2026-06-01",
+  "internship_end": "2026-07-31",
+  "working_days": 44,
+  "expected_rule_validation_status": "FAIL",
+  "violation": "Student ID not provided"
+}

@@ -1,0 +1,17 @@
+{
+  "application_id": "RULE-VIOLATION-010",
+  "student_name": "Oscar Nilsson",
+  "student_id": "missing",
+  "student_email": "oscar.nilsson@student.university.edu",
+  "field_of_study": "Civil Engineering",
+  "semester": "SS 2026",
+  "company_name": "SmartLog Logistics",
+  "supervisor_name": "Mr. Daniel Costa",
+  "supervisor_email": "costa@smartlogistics.nl",
+  "internship_dates": "2026-09-01 to 2026-09-25",
+  "internship_start": "2026-06-01",
+  "internship_end": "2026-09-25",
+  "working_days": 18,
+  "expected_rule_validation_status": "FAIL",
+  "violation": "Student ID missing and duration below 20 working days"
+}
