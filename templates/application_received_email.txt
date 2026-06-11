@@ -1,0 +1,12 @@
+Subject: Internship Application Received — {{student_name}}
+
+Dear {{student_name}},
+
+Thank you for submitting your internship application to the University Internship Office. We have received your application for the placement at {{company_name}}.
+
+Our team is now reviewing your submission. You will receive a further update once the initial validation steps are complete.
+
+If you have any questions in the meantime, please reply to this message or contact the internship coordination desk.
+
+Kind regards,
+University Internship Office

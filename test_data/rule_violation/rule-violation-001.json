@@ -1,0 +1,17 @@
+{
+  "application_id": "RULE-VIOLATION-001",
+  "student_name": "Anna Mueller",
+  "student_id": "S20210451",
+  "student_email": "anna.mueller@student.university.edu",
+  "field_of_study": "Computer Science",
+  "semester": "WS 2025/26",
+  "company_name": "TechVision GmbH",
+  "supervisor_name": "Dr. Petra Klein",
+  "supervisor_email": "klein@techvision.de",
+  "internship_dates": "2026-06-01 to 2026-06-14",
+  "internship_start": "2026-06-01",
+  "internship_end": "2026-06-14",
+  "working_days": 10,
+  "expected_rule_validation_status": "FAIL",
+  "violation": "Duration below 20 working days"
+}

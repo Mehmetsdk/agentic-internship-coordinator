@@ -1,0 +1,18 @@
+{
+  "student_name": "Felix Weber",
+  "student_id": "S20210763",
+  "student_email": "felix.weber@student.university.edu",
+  "field_of_study": "Software Engineering",
+  "semester": "SS 2026",
+  "company_name": "CloudNest Systems",
+  "supervisor_name": "Dr. Yuki Tanaka",
+  "supervisor_email": "tanaka@cloudnest.com",
+  "internship_dates": "2026-06-01 to 2026-07-31",
+  "internship_start": "2026-06-01",
+  "internship_end": "2026-07-31",
+  "working_days": 44,
+  "application_id": "VALID-008",
+  "expected_completeness_status": "COMPLETE",
+  "expected_rule_validation_status": "PASS",
+  "expected_verification_status": "NOT_REQUIRED"
+}

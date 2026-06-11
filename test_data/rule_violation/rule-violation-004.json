@@ -1,0 +1,17 @@
+{
+  "application_id": "RULE-VIOLATION-004",
+  "student_name": "Lukas Hansen",
+  "student_id": "S20211004",
+  "student_email": "lukas.hansen@student.university.edu",
+  "field_of_study": "Information Systems",
+  "semester": "SS 2026",
+  "company_name": "missing",
+  "supervisor_name": "Mr. Thomas Eriksen",
+  "supervisor_email": "eriksen@medicore-health.dk",
+  "internship_dates": "2026-06-01 to 2026-07-31",
+  "internship_start": "2026-06-01",
+  "internship_end": "2026-07-31",
+  "working_days": 44,
+  "expected_rule_validation_status": "FAIL",
+  "violation": "Company name not provided"
+}

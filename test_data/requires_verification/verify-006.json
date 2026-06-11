@@ -1,0 +1,17 @@
+{
+  "application_id": "VERIFY-006",
+  "student_name": "Noah Schmidt",
+  "student_id": "S20210911",
+  "student_email": "noah.schmidt@student.university.edu",
+  "field_of_study": "Data Science",
+  "semester": "SS 2026",
+  "company_name": "DataPulse Solutions",
+  "supervisor_name": "Supervisor TBD",
+  "supervisor_email": "missing",
+  "internship_dates": "2026-06-01 to 2026-07-31",
+  "internship_start": "2026-06-01",
+  "internship_end": "2026-07-31",
+  "working_days": 44,
+  "expected_verification_status": "REQUIRES_VERIFICATION",
+  "reason": "Supervisor not yet assigned"
+}

@@ -1,0 +1,17 @@
+{
+  "application_id": "VERIFY-005",
+  "student_name": "Sofia Patel",
+  "student_id": "S20210678",
+  "student_email": "sofia.patel@student.university.edu",
+  "field_of_study": "Electrical Engineering",
+  "semester": "WS 2025/26",
+  "company_name": "Freelance Hub",
+  "supervisor_name": "Dr. Amira Hassan",
+  "supervisor_email": "boss@freelancehub.net",
+  "internship_dates": "2026-06-01 to 2026-07-31",
+  "internship_start": "2026-06-01",
+  "internship_end": "2026-07-31",
+  "working_days": 44,
+  "expected_verification_status": "REQUIRES_VERIFICATION",
+  "reason": "Non-corporate supervisor contact"
+}

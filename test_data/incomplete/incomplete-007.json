@@ -1,0 +1,16 @@
+{
+  "application_id": "INCOMPLETE-007",
+  "student_name": "Mia Johansson",
+  "student_id": "S20210245",
+  "student_email": "mia.johansson@student.university.edu",
+  "field_of_study": "Industrial Design",
+  "semester": "WS 2025/26",
+  "company_name": "unclear",
+  "supervisor_name": "Mr. Marco Bianchi",
+  "supervisor_email": "missing",
+  "internship_dates": "2026-06-01 to 2026-07-31",
+  "internship_start": "2026-06-01",
+  "internship_end": "2026-07-31",
+  "working_days": 44,
+  "expected_completeness_status": "INCOMPLETE"
+}

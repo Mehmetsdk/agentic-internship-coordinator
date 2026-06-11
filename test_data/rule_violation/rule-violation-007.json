@@ -1,0 +1,17 @@
+{
+  "application_id": "RULE-VIOLATION-007",
+  "student_name": "Mia Johansson",
+  "student_id": "S20210245",
+  "student_email": "mia.johansson@student.university.edu",
+  "field_of_study": "Industrial Design",
+  "semester": "WS 2025/26",
+  "company_name": "RiverBank Finance",
+  "supervisor_name": "Mr. Marco Bianchi",
+  "supervisor_email": "bianchi@riverbank.fi",
+  "internship_dates": "2026-08-01 to 2026-08-12",
+  "internship_start": "2026-06-01",
+  "internship_end": "2026-08-12",
+  "working_days": 8,
+  "expected_rule_validation_status": "FAIL",
+  "violation": "Duration below 20 working days"
+}

@@ -1,0 +1,17 @@
+{
+  "application_id": "RULE-VIOLATION-009",
+  "student_name": "Laura Kim",
+  "student_id": "S20210590",
+  "student_email": "laura.kim@student.university.edu",
+  "field_of_study": "Economics",
+  "semester": "WS 2025/26",
+  "company_name": "BioLab Research",
+  "supervisor_name": "Ms. Freya Olsen",
+  "supervisor_email": "unclear",
+  "internship_dates": "2026-05-05 to 2026-05-20",
+  "internship_start": "2026-06-01",
+  "internship_end": "2026-05-20",
+  "working_days": 12,
+  "expected_rule_validation_status": "FAIL",
+  "violation": "Supervisor email unclear and duration below 20 working days"
+}
