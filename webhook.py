@@ -134,7 +134,7 @@ async def receive_application_upload(
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8503))
+    port = int(os.environ.get("WEBHOOK_PORT", 8503))
     print(f"Webhook server starting on http://localhost:{port}")
     print(f"  POST http://localhost:{port}/webhook/application  (JSON)")
     print(f"  POST http://localhost:{port}/webhook/upload        (Form-data binary)")
