@@ -2,7 +2,7 @@ FROM python:3.12-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     tesseract-ocr tesseract-ocr-tur libglib2.0-0 fonts-liberation \
-    supervisor curl git \
+    supervisor curl git nginx \
     && rm -rf /var/lib/apt/lists/*
 
 # Clone PDF Anonymizer from GitHub
@@ -18,8 +18,9 @@ RUN pip install --no-cache-dir \
     PyMuPDF Pillow Faker pdfplumber pytesseract
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY nginx.conf /etc/nginx/sites-enabled/default
 RUN mkdir -p /app/coordinator/logs
 
-EXPOSE 8501 8503
+EXPOSE 80
 
 CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
