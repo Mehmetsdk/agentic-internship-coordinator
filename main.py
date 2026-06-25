@@ -21,9 +21,8 @@ load_dotenv()
 import os
 
 groq_llm = LLM(
-    model="openai/llama-3.3-70b-versatile",
-    base_url="https://api.groq.com/openai/v1",
-    api_key=os.getenv("GROQ_API_KEY"),
+    model="anthropic/claude-haiku-4-5-20251001",
+    api_key=os.getenv("ANTHROPIC_API_KEY"),
 )
 
 
@@ -80,20 +79,18 @@ def run_pipeline(pdf_path: str, student_email: str) -> dict:
     )
 
     result = crew.kickoff()
+    ai_recommendation = str(result)
 
-    # Human-in-the-loop: coordinator reviews and approves
-    human_decision = get_human_decision(str(result))
-
-    # Audit log
+    # Save with PENDING status — coordinator decides via dashboard
     log_case(
         case_id=case_id,
         student_email=student_email,
         pdf_path=pdf_path,
-        agent_outputs={"final_recommendation": str(result)},
-        human_decision=human_decision,
+        agent_outputs={"final_recommendation": ai_recommendation},
+        human_decision={"decision": "PENDING", "notes": ""},
     )
 
-    return human_decision
+    return {"decision": "PENDING", "notes": ai_recommendation, "case_id": case_id}
 
 
 if __name__ == "__main__":

@@ -2,11 +2,11 @@
 
 from crewai import Agent, LLM
 
-from agents.completeness_validation import create_completeness_validation_agent
+from agents.completeness_validation_agent import create_completeness_validation_agent
 from agents.document_extraction_agent import create_document_extraction_agent
 from agents.email_intake_agent import create_email_intake_agent
 from agents.supervisor_verification_agent import create_supervisor_verification_agent
-from agents.university_rules import create_university_rules_agent
+from agents.university_rules_agent import create_university_rules_agent
 
 
 def create_decision_recommendation_agent(llm: LLM) -> Agent:

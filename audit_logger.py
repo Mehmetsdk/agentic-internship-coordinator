@@ -1,6 +1,7 @@
 import json
 import os
 from datetime import datetime
+from pathlib import Path
 
 
 LOGS_DIR = os.path.join(os.path.dirname(__file__), "logs")
@@ -37,6 +38,30 @@ def log_case(
 
     print(f"\n[AUDIT] Case log saved: {filepath}")
     return filepath
+
+
+def update_human_decision(case_id: str, decision: str, notes: str = "") -> bool:
+    """Update the human coordinator's decision for an existing case."""
+    os.makedirs(LOGS_DIR, exist_ok=True)
+    for f in Path(LOGS_DIR).glob(f"case_{case_id}_*.json"):
+        entry = json.loads(f.read_text(encoding="utf-8"))
+        entry["human_decision"] = {"decision": decision, "notes": notes}
+        entry["human_decision_at"] = datetime.now().isoformat()
+        f.write_text(json.dumps(entry, indent=2, ensure_ascii=False), encoding="utf-8")
+        return True
+    return False
+
+
+def load_all_cases() -> list:
+    """Load all case logs sorted by timestamp descending."""
+    os.makedirs(LOGS_DIR, exist_ok=True)
+    cases = []
+    for f in sorted(Path(LOGS_DIR).glob("case_*.json"), reverse=True):
+        try:
+            cases.append(json.loads(f.read_text(encoding="utf-8")))
+        except Exception:
+            pass
+    return cases
 
 
 def generate_case_id(student_email: str) -> str:
