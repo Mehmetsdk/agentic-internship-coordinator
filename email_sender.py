@@ -34,8 +34,8 @@ DECISION_BODIES = {
 
 def send_decision_email(to_email: str, case_id: str, decision: str, notes: str = "") -> tuple[bool, str]:
     """Send a decision notification email. Returns (success, error_message)."""
-    sender = os.getenv("SENDER_EMAIL", "")
-    password = os.getenv("SENDER_APP_PASSWORD", "")
+    sender = os.getenv("SENDER_EMAIL", "").strip()
+    password = os.getenv("SENDER_APP_PASSWORD", "").strip().replace(" ", "").replace("-", "")
 
     if not sender or not password:
         return False, "SENDER_EMAIL or SENDER_APP_PASSWORD not set in .env"

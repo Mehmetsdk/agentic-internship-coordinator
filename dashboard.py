@@ -83,11 +83,17 @@ with col_detail:
 
             field_style = "background:#f7f6f3;border:1px solid #e0ddd8;border-radius:6px;padding:0.5rem 0.8rem;font-size:0.88rem;color:#1a1a1a;font-family:monospace;"
             label_style = "font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#555;margin-bottom:0.4rem;display:block;"
+            submitted_at = case.get("timestamp", "")
+            try:
+                from datetime import datetime as _dt
+                submitted_display = _dt.fromisoformat(submitted_at).strftime("%d %b %Y, %H:%M") if submitted_at else "—"
+            except Exception:
+                submitted_display = submitted_at[:16].replace("T", " ") if submitted_at else "—"
             c1, c2, c3 = st.columns(3)
             with c1:
                 st.markdown(f'<span style="{label_style}">Student Email</span><div style="{field_style}">{_html.escape(email)}</div>', unsafe_allow_html=True)
             with c2:
-                st.markdown(f'<span style="{label_style}">Date</span><div style="{field_style}">{_html.escape(date)}</div>', unsafe_allow_html=True)
+                st.markdown(f'<span style="{label_style}">Submitted</span><div style="{field_style}">{_html.escape(submitted_display)}</div>', unsafe_allow_html=True)
             with c3:
                 st.markdown(f'<span style="{label_style}">Status</span><div style="{field_style}">{_html.escape(status)}</div>', unsafe_allow_html=True)
             st.divider()
