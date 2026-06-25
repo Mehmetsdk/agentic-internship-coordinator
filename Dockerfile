@@ -18,7 +18,7 @@ RUN pip install --no-cache-dir \
     PyMuPDF Pillow Faker pdfplumber pytesseract
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY nginx.conf /etc/nginx/sites-enabled/default
+COPY nginx.conf /etc/nginx/nginx.conf
 RUN mkdir -p /app/coordinator/logs
 
 EXPOSE 80
