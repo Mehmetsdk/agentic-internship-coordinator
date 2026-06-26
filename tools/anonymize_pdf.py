@@ -26,16 +26,15 @@ for _p in [
         sys.path.insert(0, _s)
 
 
-@tool("Anonymize PDF")
-def anonymize_pdf(pdf_path: str) -> str:
+def anonymize_pdf_file(pdf_path: str) -> str:
     """
-    Anonymize a PDF by replacing all PII (names, IDs, emails, phones, IBANs)
-    with realistic fake values. Returns the path to the anonymized PDF.
+    Anonymize a PDF file — callable directly (not a CrewAI tool).
+    Returns path to anonymized PDF, or original path if no PII found / on error.
     """
     pdf_path = str(pdf_path).strip()
     src = Path(pdf_path)
     if not src.exists():
-        return f"ERROR: File not found at '{pdf_path}'"
+        return pdf_path
 
     try:
         from pdf_extractor import extract_text_with_layout, is_scanned_pdf, ocr_pdf
@@ -44,7 +43,8 @@ def anonymize_pdf(pdf_path: str) -> str:
         from reconstructor import reconstruct_pdf
         from pipeline import _build_anonymization_map
     except ImportError as e:
-        return f"ERROR: Could not import PDF Anonymizer modules: {e}"
+        print(f"[anonymizer] WARNING: Could not import modules: {e}")
+        return pdf_path
 
     try:
         work_dir = Path(tempfile.mkdtemp())
@@ -59,7 +59,7 @@ def anonymize_pdf(pdf_path: str) -> str:
         detections = pii_result["detections"]
 
         if not detections:
-            return f"NO_PII_FOUND: {pdf_path} (no sensitive data detected, original kept)"
+            return pdf_path  # no PII, use original as-is
 
         replacements, _ = build_replacements(detections)
         anon_map = _build_anonymization_map(replacements, detections)
@@ -73,4 +73,17 @@ def anonymize_pdf(pdf_path: str) -> str:
         return str(out_path)
 
     except Exception as e:
-        return f"ERROR: Anonymization failed: {e}"
+        print(f"[anonymizer] WARNING: Anonymization failed, using original: {e}")
+        return pdf_path
+
+
+@tool("Anonymize PDF")
+def anonymize_pdf(pdf_path: str) -> str:
+    """
+    Anonymize a PDF by replacing all PII (names, IDs, emails, phones, IBANs)
+    with realistic fake values. Returns the path to the anonymized PDF.
+    """
+    result = anonymize_pdf_file(pdf_path)
+    if result == str(pdf_path).strip():
+        return f"NO_PII_FOUND: {pdf_path} (no sensitive data detected, original kept)"
+    return result

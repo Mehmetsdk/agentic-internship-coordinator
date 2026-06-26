@@ -78,6 +78,9 @@ def receive_application(payload: ApplicationPayload):
 
         student_email = _clean_email(payload.student_email)
 
+        from tools.anonymize_pdf import anonymize_pdf_file
+        pdf_path = anonymize_pdf_file(pdf_path)
+
         result = run_pipeline(
             pdf_path=pdf_path,
             student_email=student_email,
@@ -117,6 +120,10 @@ async def receive_application_upload(
         contents = await pdf_file.read()
         with open(pdf_path, "wb") as f:
             f.write(contents)
+
+        # Anonymize before sending to AI agents
+        from tools.anonymize_pdf import anonymize_pdf_file
+        pdf_path = await asyncio.to_thread(anonymize_pdf_file, pdf_path)
 
         # run_pipeline uses crewai's synchronous kickoff() which conflicts with
         # FastAPI's event loop — run it in a thread pool to avoid the conflict
