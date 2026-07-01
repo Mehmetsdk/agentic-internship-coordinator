@@ -16,7 +16,8 @@ RUN pip install --no-cache-dir \
     "crewai[anthropic]" \
     fastapi uvicorn pydantic python-dotenv \
     streamlit \
-    PyMuPDF Pillow Faker pdfplumber pytesseract
+    PyMuPDF Pillow Faker pdfplumber pytesseract \
+    gspread google-auth
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY nginx.conf /etc/nginx/nginx.conf
