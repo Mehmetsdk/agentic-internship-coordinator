@@ -8,14 +8,16 @@ LOGS_DIR = os.path.join(os.path.dirname(__file__), "logs")
 # ── Google Sheets setup ────────────────────────────────────────────────────────
 
 def _get_sheet():
+    import base64
     import gspread
     from google.oauth2.service_account import Credentials
 
-    creds_json = os.getenv("GOOGLE_CREDENTIALS_JSON")
     sheet_id = os.getenv("GOOGLE_SHEETS_ID")
-    if not creds_json or not sheet_id:
+    creds_b64 = os.getenv("GOOGLE_CREDENTIALS_JSON_B64")
+    if not creds_b64 or not sheet_id:
         return None
 
+    creds_json = base64.b64decode(creds_b64).decode("utf-8")
     info = json.loads(creds_json)
     creds = Credentials.from_service_account_info(
         info,
@@ -26,7 +28,7 @@ def _get_sheet():
 
 
 def _sheet_available() -> bool:
-    return bool(os.getenv("GOOGLE_CREDENTIALS_JSON") and os.getenv("GOOGLE_SHEETS_ID"))
+    return bool(os.getenv("GOOGLE_CREDENTIALS_JSON_B64") and os.getenv("GOOGLE_SHEETS_ID"))
 
 
 # ── Public API (same signatures as before) ────────────────────────────────────
