@@ -55,7 +55,7 @@ def log_case(
             print(f"[AUDIT] Case logged to Google Sheets: {case_id}")
             return f"sheets:{case_id}"
         except Exception as e:
-            print(f"[AUDIT] Sheets write failed, falling back to JSON: {e}")
+            print(f"[AUDIT] Sheets write failed ({type(e).__name__}): {e!r}", flush=True)
 
     # fallback — JSON
     os.makedirs(LOGS_DIR, exist_ok=True)
