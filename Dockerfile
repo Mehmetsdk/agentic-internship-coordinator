@@ -18,7 +18,7 @@ RUN pip install --no-cache-dir \
     streamlit \
     PyMuPDF Pillow Faker pdfplumber pytesseract \
     gspread google-auth \
-    langfuse
+    "langfuse>=2,<3"
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY nginx.conf /etc/nginx/nginx.conf
