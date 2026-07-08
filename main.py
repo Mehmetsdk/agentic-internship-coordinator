@@ -4,7 +4,7 @@ _cache_mod.mark_cache_breakpoint = lambda msg: msg  # noqa: E731
 
 from dotenv import load_dotenv
 from crewai import Crew, Process, Task, LLM
-from langfuse.callback import CallbackHandler
+from langfuse.decorators import observe
 
 from human_review import get_human_decision
 from audit_logger import log_case, generate_case_id
@@ -27,6 +27,7 @@ groq_llm = LLM(
 )
 
 
+@observe()
 def run_pipeline(pdf_path: str, student_email: str) -> dict:
     case_id = generate_case_id(student_email)
     email_intake = create_email_intake_agent(groq_llm)
@@ -72,14 +73,11 @@ def run_pipeline(pdf_path: str, student_email: str) -> dict:
         agent=decision,
     )
 
-    langfuse_handler = CallbackHandler()
-
     crew = Crew(
         agents=[email_intake, doc_extraction, completeness, rules, supervisor, decision],
         tasks=[task_intake, task_extraction, task_completeness, task_rules, task_supervisor, task_decision],
         process=Process.sequential,
         verbose=True,
-        callbacks=[langfuse_handler],
     )
 
     result = crew.kickoff()
