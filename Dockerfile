@@ -17,7 +17,8 @@ RUN pip install --no-cache-dir \
     fastapi uvicorn pydantic python-dotenv \
     streamlit \
     PyMuPDF Pillow Faker pdfplumber pytesseract \
-    gspread google-auth
+    gspread google-auth \
+    langfuse
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY nginx.conf /etc/nginx/nginx.conf
