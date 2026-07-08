@@ -4,7 +4,6 @@ _cache_mod.mark_cache_breakpoint = lambda msg: msg  # noqa: E731
 
 from dotenv import load_dotenv
 from crewai import Crew, Process, Task, LLM
-from langfuse import Langfuse
 from langfuse.decorators import observe, langfuse_context
 
 from human_review import get_human_decision
@@ -26,17 +25,6 @@ groq_llm = LLM(
     model="anthropic/claude-haiku-4-5-20251001",
     api_key=os.getenv("ANTHROPIC_API_KEY"),
 )
-
-langfuse_client = Langfuse()
-
-TASK_NAMES = [
-    "email_intake",
-    "document_extraction",
-    "completeness_check",
-    "university_rules",
-    "supervisor_verification",
-    "decision_recommendation",
-]
 
 
 @observe()
@@ -95,20 +83,7 @@ def run_pipeline(pdf_path: str, student_email: str) -> dict:
     result = crew.kickoff()
     ai_recommendation = str(result)
 
-    # Log each agent task as a child span
-    trace_id = langfuse_context.get_current_trace_id()
-    for i, task in enumerate(crew.tasks):
-        if task.output:
-            output_text = task.output.raw if hasattr(task.output, "raw") else str(task.output)
-            span = langfuse_client.span(
-                trace_id=trace_id,
-                name=TASK_NAMES[i],
-                input=task.description,
-                output=output_text,
-            )
-            span.end()
-
-    # Update trace output with meaningful info
+    # Update LangFuse trace with meaningful output
     langfuse_context.update_current_observation(
         output={"ai_recommendation": ai_recommendation, "case_id": case_id},
         metadata={"student_email": student_email},
