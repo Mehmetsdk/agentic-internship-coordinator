@@ -59,14 +59,14 @@ with col_list:
     st.markdown('<span style="font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:#aaa;">Applications</span>', unsafe_allow_html=True)
     if not filtered:
         st.markdown('<div style="color:#999;font-size:0.85rem;padding:1rem 0;">No applications found.</div>', unsafe_allow_html=True)
-    for c in filtered:
+    for idx, c in enumerate(filtered):
         case_id = c.get("case_id", "?")
         email = c.get("student_email", "?")
         status = c.get("human_decision", {}).get("decision", "PENDING")
         ts = c.get("timestamp", "")[:10]
         bc = f"badge-{status}"
         st.markdown(f'<div style="background:#fff;border:1px solid #e8e5e0;border-radius:8px;padding:1rem 1.2rem;margin-bottom:0.6rem;"><div style="display:flex;justify-content:space-between;align-items:flex-start;"><div><div style="font-size:0.95rem;font-weight:500;color:#1a1a1a;">{email}</div><div style="font-size:0.75rem;color:#777;">{ts}</div></div><span class="badge {bc}">{status}</span></div><div style="font-size:0.68rem;color:#999;margin-top:0.4rem;">{case_id}</div></div>', unsafe_allow_html=True)
-        if st.button("Open", key=f"btn_{case_id}"):
+        if st.button("Open", key=f"btn_{idx}_{case_id}"):
             st.session_state.selected_id = case_id
             st.rerun()
 

@@ -141,6 +141,6 @@ def load_all_cases() -> list:
 
 
 def generate_case_id(student_email: str) -> str:
-    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S%f")[:19]
     prefix = student_email.split("@")[0].upper()[:8]
     return f"{prefix}_{timestamp}"
