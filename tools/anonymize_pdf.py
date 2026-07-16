@@ -2,7 +2,6 @@
 
 import json
 import sys
-import tempfile
 from pathlib import Path
 
 from crewai.tools import tool
@@ -47,8 +46,7 @@ def anonymize_pdf_file(pdf_path: str) -> str:
         return pdf_path
 
     try:
-        work_dir = Path(tempfile.mkdtemp())
-        out_path = work_dir / f"{src.stem}_anonymized.pdf"
+        out_path = src.parent / f"{src.stem}_anon.pdf"
 
         if is_scanned_pdf(str(src)):
             layout = ocr_pdf(str(src))
