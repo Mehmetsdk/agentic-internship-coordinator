@@ -114,7 +114,7 @@ def load_all_cases() -> list:
                     row.append("")
                 r = dict(zip(headers, row))
                 cases.append({
-                    "case_id": r.get("case_id", ""),
+                    "case_id": r.get("case_id", "").strip(),
                     "timestamp": r.get("timestamp", ""),
                     "student_email": r.get("student_email", ""),
                     "pdf_path": r.get("pdf_path", ""),

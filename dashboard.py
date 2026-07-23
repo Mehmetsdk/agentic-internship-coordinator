@@ -67,12 +67,15 @@ with col_list:
         bc = f"badge-{status}"
         st.markdown(f'<div style="background:#fff;border:1px solid #e8e5e0;border-radius:8px;padding:1rem 1.2rem;margin-bottom:0.6rem;"><div style="display:flex;justify-content:space-between;align-items:flex-start;"><div><div style="font-size:0.95rem;font-weight:500;color:#1a1a1a;">{email}</div><div style="font-size:0.75rem;color:#777;">{ts}</div></div><span class="badge {bc}">{status}</span></div><div style="font-size:0.68rem;color:#999;margin-top:0.4rem;">{case_id}</div></div>', unsafe_allow_html=True)
         if st.button("Open", key=f"btn_{idx}_{case_id}"):
-            st.session_state.selected_id = case_id
+            st.session_state.selected_id = case_id.strip()
             st.rerun()
 
 with col_detail:
     if st.session_state.selected_id:
-        case = next((c for c in cases if c.get("case_id") == st.session_state.selected_id), None)
+        case = next((c for c in cases if c.get("case_id", "").strip() == st.session_state.selected_id), None)
+        if not case:
+            st.error(f"Kayıt bulunamadı: `{st.session_state.selected_id}`")
+            st.caption(f"Sheets'teki ilk 3 case_id: {[c.get('case_id','?') for c in cases[:3]]}")
         if case:
             status = case.get("human_decision", {}).get("decision", "PENDING")
             rec = case.get("agent_outputs", {}).get("final_recommendation", "")
