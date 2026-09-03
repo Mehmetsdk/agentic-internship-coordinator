@@ -1,9 +1,6 @@
-"""Independent test panel for Report Reviewer.
+"""Standalone test panel for Report Reviewer.
 
-Run with: streamlit run report_reviewer/test_panel.py
-
-This panel is INDEPENDENT from the main dashboard.py and is intended to test
-all steps (classification + certificate generation) until the flow is ready.
+Run with: python3 -m streamlit run report_reviewer/test_panel.py
 """
 
 import streamlit as st
@@ -13,14 +10,77 @@ from pathlib import Path
 from report_reviewer.intake.classify import classify_submission
 from report_reviewer.signing.certificate import generate_certificate
 
-st.set_page_config(page_title="Report Reviewer - Test Panel", page_icon="📋")
+st.set_page_config(page_title="Internship Report Reviewer", page_icon="📋", layout="centered")
 
-st.title("📋 Internship Report Reviewer — Test Panel")
-st.caption("Independent testing tool - to be integrated into the main dashboard")
+st.markdown("""
+<style>
+html, body, [class*="css"] { font-family: 'DM Sans', -apple-system, sans-serif; }
+.stApp { background: #f7f6f3; }
+.block-container { padding: 2.5rem 3rem !important; max-width: 900px !important; }
 
-st.divider()
+.header-box {
+    background: #fff;
+    border: 1px solid #e0ddd8;
+    border-radius: 16px;
+    padding: 2rem 2.4rem;
+    margin-bottom: 2rem;
+}
+.header-title {
+    font-family: Georgia, serif;
+    font-size: 2.2rem;
+    color: #1a1a1a;
+    margin-bottom: 0.4rem;
+}
+.header-sub {
+    font-size: 0.95rem;
+    color: #777;
+}
+.section-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #999;
+    margin: 1.6rem 0 0.6rem 0;
+    display: block;
+}
 
-st.subheader("1. Upload documents")
+.stButton>button {
+    border-radius: 8px !important;
+    border: 1px solid #e0ddd8 !important;
+    background: #fff !important;
+    color: #1a1a1a !important;
+}
+.stButton>button:hover {
+    background: #f26b1d !important;
+    color: #fff !important;
+    border-color: #f26b1d !important;
+}
+button[kind="primary"] {
+    background: #f26b1d !important;
+    color: #fff !important;
+    border: none !important;
+}
+button[kind="primary"]:hover {
+    background: #d95f18 !important;
+}
+
+[data-testid="stFileUploader"], .stTextInput>div>div>input {
+    border-radius: 8px !important;
+}
+
+#MainMenu, footer, header {visibility: hidden;}
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<div class="header-box">
+    <div class="header-title">Internship Report Reviewer</div>
+    <div class="header-sub">Test panel for report and journal verification</div>
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown('<span class="section-label">Step 1 — Upload documents</span>', unsafe_allow_html=True)
+
 col1, col2 = st.columns(2)
 with col1:
     file_1 = st.file_uploader("First PDF", type="pdf", key="file1")
@@ -50,8 +110,7 @@ if file_1 and file_2:
 
 if "classification_result" in st.session_state:
     result = st.session_state["classification_result"]
-    st.divider()
-    st.subheader("2. Classification result")
+    st.markdown('<span class="section-label">Step 2 — Classification result</span>', unsafe_allow_html=True)
 
     meta = result["submission_metadata"]
     if meta["fully_classified"]:
@@ -66,23 +125,22 @@ if "classification_result" in st.session_state:
     with col1:
         st.markdown("**Report (learning outcomes)**")
         if result["report_text"]:
-            st.text_area("Text (first 500 characters)", result["report_text"][:500], height=150, key="report_preview")
+            st.text_area("Preview", result["report_text"][:500], height=150, key="report_preview")
         else:
             st.info("Not found")
     with col2:
         st.markdown("**Journal**")
         if result["journal_text"]:
-            st.text_area("Text (first 500 characters)", result["journal_text"][:500], height=150, key="journal_preview")
+            st.text_area("Preview", result["journal_text"][:500], height=150, key="journal_preview")
         else:
             st.info("Not found")
 
-    st.divider()
-    st.subheader("3. Coordinator approval and signing")
+    st.markdown('<span class="section-label">Step 3 — Coordinator approval and signing</span>', unsafe_allow_html=True)
 
     if meta["fully_classified"]:
-        acknowledge = st.checkbox("I reviewed the documents and approve certificate generation")
+        acknowledge = st.checkbox("I have reviewed the documents and approve issuing the certificate")
         if acknowledge and coordinator_name.strip():
-            if st.button("🖊 Sign & Issue Certificate", type="primary"):
+            if st.button("Sign & Issue Certificate", type="primary"):
                 with tempfile.TemporaryDirectory() as tmpdir:
                     report_path = Path(tmpdir) / "report.pdf"
                     journal_path = Path(tmpdir) / "journal.pdf"
@@ -97,17 +155,25 @@ if "classification_result" in st.session_state:
                         coordinator_name=coordinator_name,
                     )
 
-                    st.success("Certificate generated successfully!")
-                    st.json(cert_result)
+                    st.success("Certificate generated successfully.")
+
+                    st.markdown(f"""
+<div style="background:#fff;border:1px solid #e0ddd8;border-radius:10px;padding:1.2rem 1.4rem;font-family:monospace;font-size:0.82rem;line-height:1.8;">
+Report hash: {cert_result['report_hash']}<br>
+Journal hash: {cert_result['journal_hash']}<br>
+Package hash: {cert_result['package_hash']}<br>
+Issued at: {cert_result['issued_at']}
+</div>
+""", unsafe_allow_html=True)
 
                     cert_bytes = Path(cert_result["certificate_path"]).read_bytes()
                     st.download_button(
-                        "📄 Download certificate",
+                        "Download certificate",
                         cert_bytes,
                         file_name="certificate.pdf",
                         mime="application/pdf",
                     )
         elif not coordinator_name.strip():
-            st.info("Please enter the coordinator name.")
+            st.info("Enter the coordinator name.")
     else:
-        st.error("Signing is disabled because the documents were not fully classified.")
+        st.error("Signing is disabled because documents were not fully classified.")
