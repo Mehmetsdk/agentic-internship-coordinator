@@ -144,14 +144,35 @@ if "classification_result" in st.session_state:
     with tabs[0]:
         st.markdown('<div style="color:#666;font-size:0.9rem;margin-bottom:0.6rem">Summary of classification and quick verification metrics</div>', unsafe_allow_html=True)
 
-        # File mapping display
-        if report_filename or journal_filename:
-            rep = report_filename or "Unknown"
-            jour = journal_filename or "Unknown"
-            st.markdown(f"**Files:** {rep} \u2192 classified as: **Report**  \n{jour} \u2192 classified as: **Journal**")
-
         # Pipeline stripe
         st.markdown("**Pipeline:**  ① Upload  →  ② Extract  →  ③ Compare  →  ④ Decide")
+
+        # File cards (Report / Journal) placed immediately under pipeline
+        r_filename = report_filename or "Unknown"
+        j_filename = journal_filename or "Unknown"
+        report_text = result.get("report_text", "") or ""
+        journal_text = result.get("journal_text", "") or ""
+        report_word_count = len(report_text.split()) if report_text else 0
+        journal_word_count = len(journal_text.split()) if journal_text else 0
+
+        c1, c2 = st.columns(2)
+        with c1:
+            st.markdown(f"""
+            <div style="background:#fff;border:1px solid #e0ddd8;border-radius:12px;padding:1.2rem 1.4rem;">
+                <div style="font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:#999;margin-bottom:0.4rem;">REPORT</div>
+                <div style="font-weight:600;font-size:1rem;color:#1a1a1a;margin-bottom:0.3rem;">{r_filename}</div>
+                <div style="font-size:0.82rem;color:#777;">{report_word_count} words</div>
+            </div>
+            """, unsafe_allow_html=True)
+        with c2:
+            st.markdown(f"""
+            <div style="background:#fff;border:1px solid #e0ddd8;border-radius:12px;padding:1.2rem 1.4rem;">
+                <div style="font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:#999;margin-bottom:0.4rem;">JOURNAL</div>
+                <div style="font-weight:600;font-size:1rem;color:#1a1a1a;margin-bottom:0.3rem;">{j_filename}</div>
+                <div style="font-size:0.82rem;color:#777;">{journal_word_count} words</div>
+            </div>
+            """, unsafe_allow_html=True)
+
 
         # Classification metadata
         if meta["fully_classified"]:
