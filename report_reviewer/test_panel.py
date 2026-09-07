@@ -6,6 +6,7 @@ Run with: python3 -m streamlit run report_reviewer/test_panel.py
 import streamlit as st
 import tempfile
 from pathlib import Path
+import re
 
 from report_reviewer.intake.classify import classify_submission
 from report_reviewer.signing.certificate import generate_certificate
@@ -207,7 +208,18 @@ if "classification_result" in st.session_state:
         report_text = result.get("report_text", "") or ""
         word_count = len(report_text.split()) if report_text else 0
         char_count = len(report_text)
-        st.markdown(f"**Word count:** {word_count} — **Character count:** {char_count}")
+
+        # metrics: Words / Characters / Classification
+        mcol1, mcol2, mcol3 = st.columns(3)
+        with mcol1:
+            st.metric("Words", word_count)
+        with mcol2:
+            st.metric("Characters", char_count)
+        with mcol3:
+            st.metric("Classification", "Report")
+
+        st.divider()
+
         if report_text:
             st.text_area("Report text", report_text, height=300, key="report_full_text")
         else:
@@ -217,18 +229,40 @@ if "classification_result" in st.session_state:
     with tabs[3]:
         st.markdown('<div style="color:#666;font-size:0.9rem;margin-bottom:0.6rem">Extracted journal content and entry metrics</div>', unsafe_allow_html=True)
         journal_text = result.get("journal_text", "") or ""
-        # Try to extract JOURNAL_HOURS info from checks, fallback to counting non-empty lines
-        journal_info = None
+
+        # Extract entries and estimated hours from JOURNAL_HOURS check message
+        entries_val = "N/A"
+        hours_val = "N/A"
         if checks_result:
             for c in checks_result.get("checks", []):
                 code = c.get("code") or c.get("id") or c.get("name")
                 if code and str(code).upper() == "JOURNAL_HOURS":
-                    journal_info = c.get("message")
+                    message = c.get("message", "")
+                    match = re.search(r"(\d+) journal entries found, estimated ([\d.]+) total hours", message)
+                    if match:
+                        entries_val = int(match.group(1))
+                        hours_val = float(match.group(2))
+                    else:
+                        # try to extract numbers more loosely
+                        m2 = re.search(r"(\d+) journal entries", message)
+                        m3 = re.search(r"([\d.]+) total hours", message)
+                        if m2:
+                            entries_val = int(m2.group(1))
+                        if m3:
+                            hours_val = float(m3.group(1))
                     break
-        if not journal_info:
-            journal_entries = sum(1 for ln in journal_text.splitlines() if ln.strip()) if journal_text else 0
-            journal_info = f"Entries: {journal_entries}"
-        st.markdown(f"**Journal info:** {journal_info}")
+
+        # show metrics: Entries / Estimated Hours / Classification
+        mcol1, mcol2, mcol3 = st.columns(3)
+        with mcol1:
+            st.metric("Entries", entries_val)
+        with mcol2:
+            st.metric("Estimated Hours", hours_val)
+        with mcol3:
+            st.metric("Classification", "Journal")
+
+        st.divider()
+
         if journal_text:
             st.text_area("Journal text", journal_text, height=300, key="journal_full_text")
         else:
