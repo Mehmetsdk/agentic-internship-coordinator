@@ -295,16 +295,48 @@ if "classification_result" in st.session_state:
     if meta["fully_classified"]:
         checks_result = st.session_state.get("checks_result")
 
-        # If checks ran and the overall status is REJECTED, disable signing
-        if checks_result and checks_result.get("overall_status") == "REJECTED":
-            st.error("Bu başvuru reddedildi, imzalanamaz")
-        else:
-            # If there are clarification requests, warn the coordinator but allow signing
-            if checks_result and checks_result.get("overall_status") == "REQUEST_CLARIFICATION":
-                st.warning("Açık noktalar var, onaylamadan önce inceleyin")
+        overall_status = checks_result.get("overall_status") if checks_result else None
 
-            acknowledge = st.checkbox("I have reviewed the documents and approve issuing the certificate")
-            if acknowledge and coordinator_name.strip():
+        # Decision dropdown (default to Reject if checks already REJECTED)
+        options = ["Pending", "Approve", "Reject", "Request Clarification"]
+        default_index = options.index("Reject") if overall_status == "REJECTED" else 0
+        decision = st.selectbox(
+            "Coordinator decision",
+            options,
+            index=default_index,
+            key="coordinator_decision",
+        )
+
+        # Reviewer note field
+        coordinator_notes = st.text_area(
+            "Reviewer note",
+            placeholder="Add evidence, correction instructions, or an approval note...",
+            key="coordinator_notes",
+        )
+
+        # Keep the acknowledgement checkbox for record, but signing depends on decision
+        acknowledge = st.checkbox("I have reviewed the documents and approve issuing the certificate")
+
+        # If checks overall is REJECTED, enforce Reject behavior
+        if overall_status == "REJECTED":
+            if decision == "Approve":
+                st.error("Cannot approve: checks indicate the submission is rejected.")
+                decision = "Reject"
+            st.error("Bu başvuru reddedildi, imzalanamaz")
+
+        # Decision-based UI and button visibility
+        if decision == "Pending":
+            st.info("Select a decision to proceed.")
+        elif decision == "Reject":
+            st.error("This submission has been rejected. No certificate will be issued.")
+        elif decision == "Request Clarification":
+            st.warning("Waiting for clarification from the student before proceeding.")
+        elif decision == "Approve":
+            # Allow signing only when coordinator name is provided
+            if not coordinator_name.strip():
+                st.info("Enter the coordinator name.")
+            else:
+                # Button appears only when decision == Approve and coordinator name is present
                 if st.button("Sign & Issue Certificate", type="primary"):
                     with tempfile.TemporaryDirectory() as tmpdir:
                         report_path = Path(tmpdir) / "report.pdf"
@@ -320,6 +352,10 @@ if "classification_result" in st.session_state:
                             coordinator_name=coordinator_name,
                         )
 
+                        # record that certificate was issued along with reviewer note
+                        st.session_state["last_certificate"] = cert_result
+                        st.session_state["last_coordinator_notes"] = coordinator_notes
+
                         st.success("Certificate generated successfully.")
 
                         st.markdown(f"""
@@ -331,6 +367,9 @@ Issued at: {cert_result['issued_at']}
 </div>
 """, unsafe_allow_html=True)
 
+                        if coordinator_notes:
+                            st.markdown(f"**Reviewer note:** {coordinator_notes}")
+
                         cert_bytes = Path(cert_result["certificate_path"]).read_bytes()
                         st.download_button(
                             "Download certificate",
@@ -338,7 +377,5 @@ Issued at: {cert_result['issued_at']}
                             file_name="certificate.pdf",
                             mime="application/pdf",
                         )
-            elif not coordinator_name.strip():
-                st.info("Enter the coordinator name.")
     else:
         st.error("Signing is disabled because documents were not fully classified.")
