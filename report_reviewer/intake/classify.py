@@ -1,4 +1,4 @@
-"""Belge siniflandirma: hangi PDF rapor, hangisi gunluk."""
+"""Document classification: which PDF is the report and which is the journal."""
 
 import re
 import logging
@@ -52,12 +52,20 @@ def classify_document_text(text: str) -> str:
 
 
 def extract_and_classify(pdf_path: str) -> dict:
-    # extract_pdf_text may be a tool-wrapped object; prefer calling .func if present
-    if hasattr(extract_pdf_text, "func"):
-        text = extract_pdf_text.func(pdf_path)
-    else:
-        text = extract_pdf_text(pdf_path)
+    # extract_pdf_text may raise on corrupted PDFs; capture exceptions and log details
+    try:
+        if hasattr(extract_pdf_text, "func"):
+            text = extract_pdf_text.func(pdf_path)
+        else:
+            text = extract_pdf_text(pdf_path)
+    except Exception as e:
+        # Log the exception with stacktrace and return an empty text so downstream marks it unreadable
+        logger.exception("Failed to extract text from %s: %s", pdf_path, e)
+        text = ""
+
     logger.debug("extract_and_classify -> extracted text length=%d preview=%r", len(text) if text else 0, (text or "")[:200])
+    if not text:
+        logger.warning("Document appears unreadable: %s", pdf_path)
     classification = classify_document_text(text)
     return {
         "path": pdf_path,
@@ -78,14 +86,15 @@ def classify_submission(pdf_path_1: str, pdf_path_2: str) -> dict:
     for doc in (doc_1, doc_2):
         if doc["classification"] == "report":
             if report_doc is not None:
-                warnings.append("Iki belge de rapor olarak siniflandirildi.")
+                warnings.append("Both documents classified as report.")
             report_doc = doc
         elif doc["classification"] == "journal":
             if journal_doc is not None:
-                warnings.append("Iki belge de gunluk olarak siniflandirildi.")
+                warnings.append("Both documents classified as journal.")
             journal_doc = doc
         else:
-            warnings.append(f"Belge okunamadi: {doc['path']}")
+            # user-visible warning message in English
+            warnings.append(f"Could not read document: {doc['path']}")
 
     return {
         "report_text": report_doc["text"] if report_doc else None,
