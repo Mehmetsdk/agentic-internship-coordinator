@@ -7,12 +7,31 @@ import streamlit as st
 import tempfile
 from pathlib import Path
 import re
+import random
+import string
+import pandas as pd
 
 from report_reviewer.intake.classify import classify_submission
 from report_reviewer.signing.certificate import generate_certificate
 from report_reviewer.checks.rules import run_all_checks
 
 st.set_page_config(page_title="Internship Report Reviewer", page_icon="📋", layout="centered")
+
+# Sidebar with quick status and process outline
+with st.sidebar:
+    st.markdown("### Report Reviewer")
+    st.caption("Computer Engineering Internship")
+    st.success("● Backend connected")
+    st.markdown("**Review process**")
+    st.markdown("""
+    1. Upload both documents
+    2. Extract and compare data
+    3. Inspect validation evidence
+    4. Make a human decision
+    """)
+    st.info("**Human-in-the-loop**\n\nSignatures, stamps and the "
+            "final decision must be verified by an authorized "
+            "coordinator.")
 
 st.markdown("""
 <style>
@@ -76,6 +95,7 @@ button[kind="primary"]:hover {
 
 st.markdown("""
 <div class="header-box">
+    <div style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:#f26b1d;font-weight:600;margin-bottom:0.5rem;">Academic Workflow Automation</div>
     <div class="header-title">Internship Report Reviewer</div>
     <div class="header-sub">Test panel for report and journal verification</div>
 </div>
@@ -103,6 +123,9 @@ if file_1 and file_2:
 
             result = classify_submission(str(path_1), str(path_2))
             st.session_state["classification_result"] = result
+            # generate a submission reference for this classification
+            ref = "SUB-" + "".join(random.choices(string.digits, k=7))
+            st.session_state["submission_ref"] = ref
             # store bytes for later signing
             st.session_state["report_bytes"] = (
                 file_1.getvalue() if result["report_file"] == str(path_1) else file_2.getvalue()
@@ -138,7 +161,7 @@ if "classification_result" in st.session_state:
     report_filename = st.session_state.get("report_filename")
     journal_filename = st.session_state.get("journal_filename")
 
-    tabs = st.tabs(["Overview", "Validation", "Learning Outcomes", "Journal"])
+    tabs = st.tabs(["Overview", "Validation", "Learning Outcomes", "Journal", "Extracted Data"])
 
     # Overview tab
     with tabs[0]:
@@ -177,6 +200,8 @@ if "classification_result" in st.session_state:
         # Classification metadata
         if meta["fully_classified"]:
             st.success("Both documents were classified successfully.")
+            if st.session_state.get("submission_ref"):
+                st.caption(f"Reference: {st.session_state.get('submission_ref')}")
         else:
             st.warning("Classification is incomplete.")
         for w in meta.get("warnings", []):
@@ -288,6 +313,66 @@ if "classification_result" in st.session_state:
             st.text_area("Journal text", journal_text, height=300, key="journal_full_text")
         else:
             st.info("No journal text available.")
+
+    # Extracted Data tab: show raw extracted values
+    with tabs[4]:
+        st.markdown('<div style="color:#666;font-size:0.9rem;margin-bottom:0.6rem">Raw values extracted from the documents during validation</div>', unsafe_allow_html=True)
+
+        if not checks_result:
+            st.info("Run classification first.")
+        else:
+            # Student name (input)
+            student_input = student_name
+
+            # Journal date range from DATE_CONSISTENCY check
+            date_range_str = "N/A"
+            entries_val = "N/A"
+            hours_val = "N/A"
+            for c in checks_result.get("checks", []):
+                code = c.get("code") or c.get("id") or c.get("name")
+                if code and str(code).upper() == "DATE_CONSISTENCY":
+                    msg = c.get("message", "")
+                    m = re.search(r"from ([\d.]+) to ([\d.]+)", msg)
+                    if m:
+                        date_range_str = f"{m.group(1)} to {m.group(2)}"
+                if code and str(code).upper() == "JOURNAL_HOURS":
+                    msg = c.get("message", "")
+                    m = re.search(r"(\d+) journal entries found, estimated ([\d.]+) total hours", msg)
+                    if m:
+                        entries_val = int(m.group(1))
+                        hours_val = float(m.group(2))
+                    else:
+                        m2 = re.search(r"(\d+) journal entries", msg)
+                        m3 = re.search(r"([\d.]+) total hours", msg)
+                        if m2:
+                            entries_val = int(m2.group(1))
+                        if m3:
+                            hours_val = float(m3.group(1))
+
+            report_wc = len(result.get("report_text", "").split()) if result.get("report_text") else 0
+            journal_wc = len(result.get("journal_text", "").split()) if result.get("journal_text") else 0
+
+            extracted_data = {
+                "Field": [
+                    "Student name (input)",
+                    "Journal date range",
+                    "Journal entries",
+                    "Estimated hours",
+                    "Report word count",
+                    "Journal word count",
+                ],
+                "Value": [
+                    student_input,
+                    date_range_str,
+                    entries_val,
+                    hours_val,
+                    report_wc,
+                    journal_wc,
+                ],
+            }
+
+            df = pd.DataFrame(extracted_data)
+            st.table(df)
 
     # Step 3 — Coordinator approval and signing (renumbered)
     st.markdown('<span class="section-label">Step 3 — Coordinator approval and signing</span>', unsafe_allow_html=True)
