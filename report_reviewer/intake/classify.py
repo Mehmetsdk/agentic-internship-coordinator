@@ -1,8 +1,11 @@
 """Belge siniflandirma: hangi PDF rapor, hangisi gunluk."""
 
 import re
+import logging
 
 from tools.pdf_extract import extract_pdf_text
+
+logger = logging.getLogger(__name__)
 
 _DATE_PATTERNS = [
     r"\bDay\s+\d+\b",
@@ -49,7 +52,12 @@ def classify_document_text(text: str) -> str:
 
 
 def extract_and_classify(pdf_path: str) -> dict:
-    text = extract_pdf_text.func(pdf_path)
+    # extract_pdf_text may be a tool-wrapped object; prefer calling .func if present
+    if hasattr(extract_pdf_text, "func"):
+        text = extract_pdf_text.func(pdf_path)
+    else:
+        text = extract_pdf_text(pdf_path)
+    logger.debug("extract_and_classify -> extracted text length=%d preview=%r", len(text) if text else 0, (text or "")[:200])
     classification = classify_document_text(text)
     return {
         "path": pdf_path,
